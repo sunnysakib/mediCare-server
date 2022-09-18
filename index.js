@@ -44,7 +44,7 @@ async function run(){
       const bookingCollection = client.db('mediCare').collection('bookings');
       const userCollection = client.db('mediCare').collection('users');
       const doctorCollection = client.db('mediCare').collection('doctors');
-
+        //server for server
       app.get('/service', async (req, res) =>{
         const query = {};
         const cursor = serviceCollection.find(query).project({ name: 1 });
