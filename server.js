@@ -18,18 +18,10 @@ async function run(){
       await client.connect().then(()=>{
         console.log("mongoDB connection established");
       });
-      const serviceCollection =  client.db('mediCare').collection('services');
       const bookingCollection = client.db('mediCare').collection('bookings');
       const userCollection = client.db('mediCare').collection('users');
       const doctorCollection = client.db('mediCare').collection('doctors');
-        //server for serv
-      // app.get('/service', async (req, res) =>{
-      //   const query = {};
-      //   const cursor = serviceCollection.find(query).project({ name: 1 });
-      //   const services = await cursor.toArray();
-      //   res.send(services);
-      // })
-
+      
       app.get('/user', verifyJWT, async (req, res) => {
         const users = await userCollection.find().toArray();
         res.send(users);
@@ -74,25 +66,7 @@ async function run(){
         res.send({ result, token});
       })
 
-      app.get('/available', async(req, res) =>{
-        const date = req.query.date;
   
-        const services = await serviceCollection.find().toArray();
-
-        const query = {date: date};
-        const bookings = await bookingCollection.find(query).toArray();
-  
-        services.forEach(service=>{
-          const serviceBookings = bookings.filter(book => book.treatment === service.name);
-          const bookedSlots = serviceBookings.map(book => book.slot);
-          const available = service.slots.filter(slot => !bookedSlots.includes(slot));
-          service.slots = available;
-        });
-       
-  
-        res.send(services);
-      }) 
-
       app.get('/booking',verifyJWT, async(req, res) =>{
         const patient = req.query.patient;
         const decodedEmail = req.decoded.email;
