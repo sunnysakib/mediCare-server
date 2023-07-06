@@ -29,7 +29,7 @@ async function httpGetAllBooking(req, res){
     }
 
     const result = await insertBooking(booking)
-    return res.send({ success: true, result});
+    return res.status(200).send({ success: true, result});
   }
   
 module.exports = {httpGetAllBooking, httpPostBookingService, httpGetBookingById}

@@ -18,14 +18,9 @@ async function run(){
       await client.connect().then(()=>{
         console.log("mongoDB connection established");
       });
-      const bookingCollection = client.db('mediCare').collection('bookings');
       const userCollection = client.db('mediCare').collection('users');
       const doctorCollection = client.db('mediCare').collection('doctors');
       
-      app.get('/user', verifyJWT, async (req, res) => {
-        const users = await userCollection.find().toArray();
-        res.send(users);
-      });
 
       app.get('/admin/:email', async(req, res) =>{
         const email = req.params.email;
@@ -35,36 +30,6 @@ async function run(){
       })
   
 
-      app.put('/user/admin/:email', verifyJWT, async (req, res) => {
-        const email = req.params.email;
-        const requester = req.decoded.email;
-        const requesterAccount = await userCollection.findOne({ email: requester });
-        if (requesterAccount.role === 'admin') {
-          const filter = { email: email };
-          const updateDoc = {
-            $set: { role: 'admin' },
-          };
-          const result = await userCollection.updateOne(filter, updateDoc);
-          res.send(result);
-        }
-        else{
-          res.status(403).send({message: 'forbidden'});
-        }
-  
-      })
-
-      app.put('/user/:email', async (req, res) => {
-        const email = req.params.email;
-        const user = req.body;
-        const filter = { email: email };
-        const options = { upsert: true };
-        const updateDoc = {
-          $set: user,
-        };
-        const result = await userCollection.updateOne(filter, updateDoc, options);
-        const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET , { expiresIn: '2h' })
-        res.send({ result, token});
-      })
 
       app.get('/doctor',verifyJWT, async(req, res) =>{
         const doctors = await doctorCollection.find().toArray();
