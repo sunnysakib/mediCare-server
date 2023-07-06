@@ -66,39 +66,6 @@ async function run(){
         res.send({ result, token});
       })
 
-  
-      app.get('/booking',verifyJWT, async(req, res) =>{
-        const patient = req.query.patient;
-        const decodedEmail = req.decoded.email;
-        if (patient === decodedEmail) {
-          const query = { patient: patient };
-          const bookings = await bookingCollection.find(query).toArray();
-          return res.send(bookings);
-        }
-        else {
-          return res.status(403).send({ message: 'forbidden access' });
-        }
-      })
-  
-      app.post('/booking', async (req, res) => {
-        const booking = req.body;
-        const query = { treatment: booking.treatment, date: booking.date, patient: booking.patient }
-        const exists = await bookingCollection.findOne(query);
-        if (exists) {
-          return res.send({ success: false, booking: exists })
-        }
-        const result = await bookingCollection.insertOne(booking);
-        return res.send({ success: true, result });
-      })
-
-
-      app.get('/booking/:id', verifyJWT, async(req, res) =>{
-        const id = req.params.id;
-        const query = {_id: ObjectId(id)};
-        const booking = await bookingCollection.findOne(query);
-        res.send(booking);
-      })
-
       app.get('/doctor',verifyJWT, async(req, res) =>{
         const doctors = await doctorCollection.find().toArray();
         res.send(doctors);
