@@ -1,15 +1,8 @@
-const express = require("express");
 const app = require('./app')
 const verifyJWT = require('./src/utilites/verifyJWT')
 const dbConnect = require('./src/utilites/dbConnect')
-const jwt = require('jsonwebtoken');
-require("dotenv").config();
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
-
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const port = process.env.PORT || 5000;
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.0trawla.mongodb.net/?retryWrites=true&w=majority`
 
 const client = dbConnect()
 
@@ -29,28 +22,8 @@ async function run(){
         res.send({admin: isAdmin})
       })
   
-
-
-      app.get('/doctor',verifyJWT, async(req, res) =>{
-        const doctors = await doctorCollection.find().toArray();
-        res.send(doctors);
-      })
-  
-      app.post('/doctor', verifyJWT, async (req, res) => {
-        const doctor = req.body;
-        const result = await doctorCollection.insertOne(doctor);
-        res.send(result);
-      });
-
-      app.delete('/doctor/:email', verifyJWT, async (req, res) => {
-        const email = req.params.email;
-        const filter = {email: email};
-        const result = await doctorCollection.deleteOne(filter);
-        res.send(result);
-      })
-
-  } finally{
-
+  } catch(err){
+    console.error(err);
   }
 }
 run().catch(console.dir)

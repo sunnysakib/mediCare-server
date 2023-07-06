@@ -8,6 +8,7 @@ async function getAllUser(){
     const users = await userCollection.find().toArray();
     return users;
 }
+
 async function putUserEmail(email, user){
     const filter = { email: email };
     const options = { upsert: true };

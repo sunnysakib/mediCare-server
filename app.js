@@ -4,6 +4,7 @@ const serviceRouter = require('./src/routes/service/service.router');
 const availableRouter = require('./src/routes/available/available.router');
 const bookingRouter = require('./src/routes/booking/booking.router');
 const userRouter = require('./src/routes/users/user.router');
+const doctorRouter = require('./src/routes/doctors/doctor.router');
 
 const app = express();
 
@@ -13,5 +14,6 @@ app.use('/service', serviceRouter);
 app.use('/available', availableRouter);
 app.use('/booking', bookingRouter);
 app.use('/user', userRouter);
+app.use('/doctor', doctorRouter);
 
 module.exports = app;
